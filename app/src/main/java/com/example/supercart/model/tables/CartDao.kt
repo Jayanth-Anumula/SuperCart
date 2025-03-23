@@ -35,8 +35,19 @@ interface CartDao {
     fun getProductQuantityInCart(userId: Long, productId: Long): Int
 
 
+
     @Query("SELECT user_id FROM user WHERE email_id = :email AND password = :password LIMIT 1")
     fun getUserIdByEmailAndPassword(email: String, password: String): Long?
+
+    @Transaction
+    @Query("""
+        SELECT p.product_id, p.product_name, p.description, p.price, 
+               p.average_rating, p.product_image_url, ci.quantity
+        FROM cart_item ci
+        JOIN product p ON ci.product_id = p.product_id
+        WHERE ci.user_id = :userId
+    """)
+    fun getUserCartItems(userId: Long): List<UserCartItem>
 
 
 }

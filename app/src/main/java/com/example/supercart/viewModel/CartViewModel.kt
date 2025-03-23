@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 
 class CartViewModel(private val repository: LocalRepository) : ViewModel() {
 
-    private val _cartItems = MutableLiveData<List<CartItem>>()
-    val cartItems: LiveData<List<CartItem>> = _cartItems
+    private val _cartItems = MutableLiveData<List<UserCartItem>>()
+    val cartItems: LiveData<List<UserCartItem>> = _cartItems
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -24,7 +24,6 @@ class CartViewModel(private val repository: LocalRepository) : ViewModel() {
     val productsList: LiveData<List<Product>> = _products
 
     fun insertUser(user: User) {
-
             try {
                 repository.insertUser(user)
             } catch (e: Exception) {
@@ -136,6 +135,17 @@ class CartViewModel(private val repository: LocalRepository) : ViewModel() {
 
     }
 
+
+  fun getUserCartItems(userId:Long):List<UserCartItem>{
+      try{
+          _cartItems.postValue(repository.getUserCartItems(userId))
+          return repository.getUserCartItems(userId)
+
+      }catch (e : Exception){
+          _error.postValue(e.toString())
+          return emptyList()
+      }
+  }
 
 
 

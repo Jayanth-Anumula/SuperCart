@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:layout_marginTop="40dp"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -24,6 +24,15 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         </androidx.appcompat.widget.Toolbar>
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:id="@+id/totalAmtTv"
+            android:gravity="center_horizontal"
+            android:textSize="21sp"
+            android:text="Total amount : "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
 
         <androidx.recyclerview.widget.RecyclerView

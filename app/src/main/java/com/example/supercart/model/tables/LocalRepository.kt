@@ -76,6 +76,15 @@ class LocalRepository(private val appDatabase: AppDatabase) {
         }
     }
 
+    fun getUserCartItems(userId: Long):List<UserCartItem>{
+        return try{
+            appDatabase.cartDao().getUserCartItems(userId)
+        }catch (e:Exception) {
+            _error.postValue(e.toString())
+            return emptyList()
+        }
+    }
+
 
 
 }
