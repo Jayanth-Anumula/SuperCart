@@ -9,13 +9,22 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.ecomerceapp.models.ApiClient
+import com.example.ecomerceapp.models.ApiService
 import com.example.supercart.R
+import com.example.supercart.adapters.CategoryAdapter
+import com.example.supercart.commons.ApiResult
 import com.example.supercart.databinding.ActivityDashboardBinding
+import com.example.supercart.model.local.Categories
+import com.example.supercart.model.remote.ProductRepository
 import com.example.supercart.model.tables.AppDatabase
 import com.example.supercart.model.tables.CartDao
 import com.example.supercart.model.tables.LocalRepository
 import com.example.supercart.viewModel.CartViewModel
 import com.example.supercart.viewModel.CartViewModelFactory
+import com.example.supercart.viewModel.PhonesViewModel
+import com.example.supercart.viewModel.PhonesViewModelFactory
 import com.squareup.picasso.Picasso
 
 class DashboardActivity : AppCompatActivity() {
@@ -24,6 +33,10 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var cartDao: CartDao
     private lateinit var cartViewModel: CartViewModel
     private lateinit var localRepository: LocalRepository
+    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var phonesViewModel: PhonesViewModel
+    private lateinit var categories: List<Categories>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,19 +50,10 @@ class DashboardActivity : AppCompatActivity() {
         val factory = CartViewModelFactory(localRepository)
         cartViewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
 
+        var productRepository = ProductRepository(ApiClient.retrofit.create(ApiService::class.java))
+        val phonesFactory = PhonesViewModelFactory(productRepository)
+        phonesViewModel = ViewModelProvider(this, phonesFactory)[PhonesViewModel::class.java]
 
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/smartphones.png").into(binding.phonesImage)
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/laptops.png").into(binding.laptopImage)
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/mensfashion.png").into(binding.MensWearImage)
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/womensfashion.png").into(binding.womensWearImage)
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/kidsfashion.png").into(binding.kidsWearImage)
-        Picasso.get().load("https://apolisrises.co.in/myshop/images/homeappliances.png").into(binding.groceryImage)
-
-
-        binding.phonesImage.setOnClickListener(){
-            val i = Intent(this,CategoryActivity::class.java)
-            startActivity(i)
-        }
 
         setSupportActionBar(binding.toolbar)
 
@@ -88,6 +92,37 @@ class DashboardActivity : AppCompatActivity() {
             true
         }
 
+        observeCategoryList()
+        phonesViewModel.categoriesList()
+
+    }
+
+    private fun observeCategoryList() {
+        phonesViewModel.apiCategoriesResult.observe(this) { result ->
+            when (result) {
+                is ApiResult.Loading -> Toast.makeText(this, "Loading categories...", Toast.LENGTH_SHORT).show()
+                is ApiResult.Error -> Toast.makeText(this, result.message, Toast.LENGTH_SHORT).show()
+                is ApiResult.Success -> {
+                     categories = result.data.categories
+                    setupCategoryRecyclerView()
+
+                }
+            }
+        }
+    }
+
+    private fun setupCategoryRecyclerView() {
+       if(::categories.isInitialized){
+           categoryAdapter = CategoryAdapter(categories)
+           binding.rvCategories.layoutManager = GridLayoutManager(this, 2)
+           binding.rvCategories.adapter = categoryAdapter
+       }
+
+        categoryAdapter.setOnClickCategoryItemListner { category: Categories, _: Int ->
+            val intent = Intent(this, CategoryActivity::class.java)
+            intent.putExtra("categoryId", category.category_id)
+            startActivity(intent)
+        }
     }
 
     private fun logOutUser() {

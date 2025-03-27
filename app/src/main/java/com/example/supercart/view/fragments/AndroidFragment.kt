@@ -63,8 +63,8 @@ class AndroidFragment : Fragment() {
         setupRecyclerView()
 
 
-        androidList = categoryDataListener?.getAndroidList()
-        androidList?.let { updateData(it) }
+//        androidList = categoryDataListener?.getAndroidList()
+//        androidList?.let { updateData(it) }
 
 
         return binding.root
@@ -77,6 +77,7 @@ class AndroidFragment : Fragment() {
 
     fun updateData(newList: ArrayList<Product>) {
         androidList = newList
+        Log.d("newList",newList.toString())
         adapter = AndroidAdapter(newList)
         binding.rvAndroid.adapter = adapter
 
