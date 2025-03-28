@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.supercart.model.local.OrderRequestBody
 import com.example.supercart.model.tables.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +15,8 @@ class CartViewModel(private val repository: LocalRepository) : ViewModel() {
 
     private val _cartItems = MutableLiveData<List<UserCartItem>>()
     val cartItems: LiveData<List<UserCartItem>> = _cartItems
+    val selectedPaymentMethod = MutableLiveData<String>()
+
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
@@ -146,6 +149,10 @@ class CartViewModel(private val repository: LocalRepository) : ViewModel() {
           return emptyList()
       }
   }
+
+
+
+
 
 
 

@@ -28,6 +28,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var localRepository:LocalRepository
     private lateinit var userPreferences: UserPreferences
     private lateinit var cartList: List<UserCartItem>
+    private lateinit var cartViewModel: CartViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,12 +65,26 @@ class CartActivity : AppCompatActivity() {
                     Toast.makeText(this, "Cart Clicked", Toast.LENGTH_SHORT).show()
                 }
                 R.id.orders -> {
+                    val intent = Intent(this, OrdersActivity::class.java)
+                    startActivity(intent)
+                    Toast.makeText(this, "Orders Clicked", Toast.LENGTH_SHORT).show()
+
                     Toast.makeText(this, "orders Clicked", Toast.LENGTH_SHORT).show()
                 }
                 R.id.profile -> {
                     Toast.makeText(this, "Profile Clicked", Toast.LENGTH_SHORT).show()
                 }
                 R.id.logout -> {
+                    var appDatabase = AppDatabase.getInstance(this)
+                    var cartDao = appDatabase.cartDao()
+                    localRepository = LocalRepository(appDatabase)
+                    val factory = CartViewModelFactory(localRepository)
+                    cartViewModel = ViewModelProvider(this, factory)[CartViewModel::class.java]
+
+                    cartViewModel.logoutUser(userPreferences.getUserEmail()!!,userPreferences.getUserPassword()!!)
+                    userPreferences.logoutUser()
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
                 }
             }
 
@@ -79,6 +94,11 @@ class CartActivity : AppCompatActivity() {
         var userId = viewModel.getUserIdByEmailAndPassword(userPreferences.getUserEmail()!!,userPreferences.getUserPassword()!!)
         if (userId != null) {
             viewModel.getUserCartItems(userId.toLong())
+        }
+
+        binding.checkOutBtn.setOnClickListener(){
+            val i = Intent(this,CheckoutActivity::class.java)
+            startActivity(i)
         }
 
         setUpObservers()

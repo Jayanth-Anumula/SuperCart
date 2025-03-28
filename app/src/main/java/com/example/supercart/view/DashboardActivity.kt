@@ -78,6 +78,10 @@ class DashboardActivity : AppCompatActivity() {
                     Toast.makeText(this,"Cart Clicked", Toast.LENGTH_SHORT).show()
                 }
                 R.id.orders -> {
+                    val intent = Intent(this, OrdersActivity::class.java)
+                    startActivity(intent)
+                    Toast.makeText(this,"Orders Clicked", Toast.LENGTH_SHORT).show()
+
                     Toast.makeText(this,"orders Clicked", Toast.LENGTH_SHORT).show()
                 }
                 R.id.profile -> {

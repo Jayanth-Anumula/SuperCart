@@ -8,6 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.ecomerceapp.models.AndroidResponseBody
 import com.example.supercart.commons.ApiResult
 import com.example.supercart.model.local.CategoriesResponse
+<<<<<<< HEAD
+import com.example.supercart.model.local.ProductDetails
+=======
+>>>>>>> aeeaa65a9144bd1c849947c46287c10a1fbc0b02
 import com.example.supercart.model.local.subCategoryResponse
 import com.example.supercart.model.remote.ProductRepository
 import com.example.supercart.model.remote.UserRepository
@@ -25,6 +29,15 @@ class PhonesViewModel(var repository: ProductRepository):ViewModel() {
     private var _apiSubCategoriesResult = MutableLiveData<ApiResult<subCategoryResponse>>()
     var apiSubCategoriesResult:LiveData<ApiResult<subCategoryResponse>> = _apiSubCategoriesResult
 
+<<<<<<< HEAD
+    private var _apiProductDetailsResult = MutableLiveData<ProductDetails>()
+    var apiProductDetailsResult:LiveData<ProductDetails> = _apiProductDetailsResult
+
+    private var _error = MutableLiveData<String>()
+    var error:LiveData<String> = _error
+
+=======
+>>>>>>> aeeaa65a9144bd1c849947c46287c10a1fbc0b02
 
     fun categoriesList(){
         try{
@@ -71,6 +84,25 @@ class PhonesViewModel(var repository: ProductRepository):ViewModel() {
         }
     }
 
+<<<<<<< HEAD
+    fun getProductDetails(product_id:String){
+
+        viewModelScope.launch {
+
+            try{
+                val res = repository.getProductDetails(product_id)
+                if(res.isSuccessful && res.body() != null){
+                    _apiProductDetailsResult.postValue(res.body())
+                }
+            }catch (e:Exception){
+                _error.postValue(e.printStackTrace().toString())
+            }
+        }
+
+    }
+
+=======
+>>>>>>> aeeaa65a9144bd1c849947c46287c10a1fbc0b02
 
 
 

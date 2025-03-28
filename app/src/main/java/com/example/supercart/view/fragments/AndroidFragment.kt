@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ecomerceapp.adapters.AndroidAdapter
 import com.example.ecomerceapp.models.Product
+import com.example.supercart.R
 import com.example.supercart.databinding.FragmentAndroidBinding
 import com.example.supercart.model.tables.AppDatabase
 import com.example.supercart.model.tables.CartDao
@@ -19,6 +20,7 @@ import com.example.supercart.model.tables.CartItem
 import com.example.supercart.model.tables.LocalRepository
 import com.example.supercart.view.CartActivity
 import com.example.supercart.view.UserPreferences
+import com.example.supercart.view.fragments.ProductDetailsFragment
 import com.example.supercart.viewModel.CartSingleton
 import com.example.supercart.viewModel.CartViewModel
 import com.example.supercart.viewModel.CartViewModelFactory
@@ -80,6 +82,19 @@ class AndroidFragment : Fragment() {
         Log.d("newList",newList.toString())
         adapter = AndroidAdapter(newList)
         binding.rvAndroid.adapter = adapter
+
+        adapter.setOnItemClickListener { productId ->
+            val fragment = ProductDetailsFragment()
+            val bundle = Bundle()
+            bundle.putString("product_id", productId)
+            fragment.arguments = bundle
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.mainContainer3, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
 
         adapter.setAddProductToCart { product, position ->
             val userId = cartViewModel.getUserIdByEmailAndPassword(

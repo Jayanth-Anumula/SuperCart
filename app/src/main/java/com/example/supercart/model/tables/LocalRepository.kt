@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 
 class LocalRepository(private val appDatabase: AppDatabase) {
 
+
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 

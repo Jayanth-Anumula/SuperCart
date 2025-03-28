@@ -10,8 +10,9 @@ class UserPreferences(context: Context) {
 
 
 
-    fun saveUser(email: String, password: String) {
+    fun saveUser(userId:String,email: String, password: String) {
         val editor = sharedPreferences.edit()
+        editor.putString("userId",userId)
         editor.putString("email", email)
         editor.putString("password", password)
         editor.putBoolean("isLoggedIn", true)
@@ -24,8 +25,12 @@ class UserPreferences(context: Context) {
     fun getUserPassword(): String? {
         return sharedPreferences.getString("password", "User")
     }
+    fun getUserId(): String? {
+        return sharedPreferences.getString("userId", "1")
+    }
 
-    fun loginUser(email: String, password: String): Boolean {
+    fun loginUser(userId:String,email: String, password: String): Boolean {
+
         val savedEmail = sharedPreferences.getString("email", null)
         val savedPassword = sharedPreferences.getString("password", null)
         return if (email == savedEmail && password == savedPassword) {

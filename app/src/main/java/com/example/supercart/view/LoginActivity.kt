@@ -59,7 +59,7 @@ class LoginActivity : AppCompatActivity() {
 
                         cartViewModel.loginUser(email, password)
 
-                        userPreferences.saveUser(email, password)
+                        userPreferences.saveUser(loginResponse.user.userId,email, password)
                         userPreferences.setLoggedIn(true)
 
                         Toast.makeText(this, "User Logged In", Toast.LENGTH_LONG).show()
